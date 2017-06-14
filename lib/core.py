@@ -66,4 +66,4 @@ class Core():
         return self.cu.fetchall()
 
     def start(self):
-        
+        pass
