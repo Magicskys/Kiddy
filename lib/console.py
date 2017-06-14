@@ -45,10 +45,11 @@ class Interface(cmd.Cmd,Core):
             print
             print "共有%d个任务,%d个任务成功" %(self.count()[0][0],self.ok_count()[0][0])
         else:
-            self.status(arg)
+            for session, url, status in self.status(arg):
+                print "%-20s%-13s%s" % (session, url, status)
 
     def do_info(self,arg):
-        print "%-20s%-15s%-15s%s" % ("ID", "状态", "地址","数据")
+        print "%-20s%-15s%-17s%s" % ("ID", "状态", "地址","数据")
         print "%-20s%-13s%-15s%s" % ("-------", "------","-----","------")
         if not arg:
             for session, url, status in self.info(arg):

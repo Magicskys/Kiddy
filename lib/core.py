@@ -34,8 +34,8 @@ class Core():
                     return self.cu.execute("SELECT SESSION,URL,STATUS FROM info;")
                 except:
                     logger.error("查询错误")
+                    logger.error("Sqlmap中没有这个%s任务"%session)
                     return self.cu.execute("SELECT SESSION,STATUS,URL FROM info;")
-                    # logger.error("Sqlmap中没有这个%s任务"%session)
         else:
             try:
                 status = requests.get("127.0.0.1:8775/scan/" + arg + "/status").json()['status']
@@ -44,15 +44,16 @@ class Core():
                 return self.cu.execute("SELECT SESSION,URL,STATUS FROM info WHERE SESSION='"+arg+"';")
             except:
                 logger.error("Sqlmap中没有这个%s任务"%arg)
-                self.cu.execute("SELECT SESSION,URL,STATUS FROM info WHERE SESSION='" + arg + "';")
-                return self.cu.fetchall()
-
+                return self.cu.execute("SELECT SESSION,URL,STATUS FROM info WHERE SESSION='" + arg + "';")
 
     def info(self,arg):
-        if arg=="":
-            return self.cu.execute("SELECT SESSION,URL,STATUS FROM info where status='terminal';")
-        else:
-            return self.cu.execute("SELECT * FROM info WHERE SESSION='" + arg + "';")
+        try:
+            if arg=="":
+                return self.cu.execute("SELECT SESSION,URL,STATUS FROM info where status='terminal';")
+            else:
+                return self.cu.execute("SELECT * FROM info WHERE SESSION='" + arg + "';")
+        except:
+            logger.error("查询错误")
 
     def save(self):
         pass
