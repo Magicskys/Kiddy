@@ -15,3 +15,12 @@
  
  
  不得用于非法用途
+ 
+ 
+ 使用说明
+ 运行SQLMAPAPI
+
+      python sqlmapapi.py -s
+      
+  
+      程序内输入help显示帮助菜单
