@@ -23,6 +23,7 @@ class Interface(cmd.Cmd,Core):
         commands={
             'help':"帮助菜单",
             'start':'启动探测',
+            'stop':'停止探测',
             'inti':'初始化数据库  ',
             'status':'查看任务状态(可加session号查询)',
             'info':'查看成功的任务(可加session号查询)',
@@ -67,25 +68,28 @@ class Interface(cmd.Cmd,Core):
         print "%-20s%-15s%s" % ("ID", "状态", "地址")
         print "%-20s%-13s%s" % ("-------", "------", "---------")
         if not arg:
-            for session, url, status in self.status(arg):
-                print "%-20s%-13s%s" % (session, url, status)
-            print
-            print "共有%d个任务,%d个任务成功" %(self.count()[0][0],self.ok_count()[0][0])
+            if self.status(arg):
+                for session, status, url in self.status(arg):
+                    print "%-20s%-13s%s" % (session, status, url)
+                print
+                print "共有%d个任务,%d个任务成功" %(self.count()[0][0],self.ok_count()[0][0]  )
+            else:
+                logger.info("没有任务")
         else:
             for session, url, status in self.status(arg):
-                print "%-20s%-13s%s" % (session, url, status)
+                print "%-20s%-13s%s" % (session, status, url)
 
     def do_info(self,arg):
         print "%-20s%-15s%-17s%s" % ("ID", "状态", "地址","数据")
         print "%-20s%-13s%-15s%s" % ("-------", "------","-----","------")
         if not arg:
-            for session, url, status in self.info(arg):
-                print "%-20s%-13s%s" % (session, url, status)
+            for session, status, url in self.info(arg):
+                print "%-20s%-13s%s" % (session, status, url)
             print
             print "共有%d个任务成功"%self.ok_count()[0][0]
         else:
-            for session, url, status,data in self.info(arg):
-                print "%-20s%-13s%-15s%s" % (session, url, status,data)
+            for session, status, url,data in self.info(arg):
+                print "%-20s%-13s%-15s%s" % (session, status, url,data)
             print
 
     def do_save(self,arg):
@@ -96,9 +100,8 @@ class Interface(cmd.Cmd,Core):
         self.init()
 
     def do_thread(self,arg):
-        print self.th_sniff.getName()
-        print self.th_sniff.isAlive()
-        # logger.info(self.activeCount())
+        print "线程名：",self.th_sniff.getName()
+        print "线程活动状态：",self.th_sniff.isAlive()
 
     def do_stop(self,arg):
         try:

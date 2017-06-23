@@ -8,19 +8,17 @@
         　||　╰/ /　 || ОО 
 
  被动式SQL扫描工具
- 
- 基于事件驱动
- 
- 未完待续
- 
- 
+   
  不得用于非法用途
  
- 
- 使用说明
- 运行SQLMAPAPI
 
-      python sqlmapapi.py -s
+ **使用说明**
+
+      使用前进入Sqlmap输入以下命令
+            python sqlmapapi.py -s
       
-  
+      浏览器代理端口号为8080
+      
+      在程序内输入start开启嗅探,stop停止嗅探
+      
       程序内输入help显示帮助菜单

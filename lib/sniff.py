@@ -1,7 +1,7 @@
 from mitmproxy import flow, controller, options
 from mitmproxy.proxy import ProxyServer, ProxyConfig
 from core import Core
-import requests,re
+import re
 
 def proxy_address(flow):
     return ("remote_ip", 18002)
