@@ -3,7 +3,7 @@ import sqlite3
 from lib import logger
 import requests
 import json
-
+import re
 class Core(object):
     def __init__(self):
         self.conn=sqlite3.connect("database/core.db")
@@ -17,14 +17,14 @@ class Core(object):
         try:
             self.cu.execute("DROP TABLE info;")
             self.cu.execute("DROP TABLE sniff")
-            self.cu.execute("CREATE TABLE info (SESSION STRING,STATUS STRING,URL STRING,DATA STRING);")
-            self.cu.execute("CREATE TABLE sniff (SESSION STRING,METHOD STRING,URL STRING,COOKIE STRING,DATA STRING);")
+            self.cu.execute("CREATE TABLE info (SESSION STRING,STATUS STRING,URL STRING,DATA TEXT);")
+            self.cu.execute("CREATE TABLE sniff (SESSION STRING,METHOD STRING,URL STRING,COOKIE STRING,DATA TEXT);")
             logger.success("初始化成功")
         except:
             logger.error("初始化错误")
             logger.info("从新建立数据库")
-            self.cu.execute("CREATE TABLE info (SESSION STRING,STATUS STRING,URL STRING,DATA STRING);")
-            self.cu.execute("CREATE TABLE sniff (SESSION STRING,METHOD STRING,URL STRING,COOKIE STRING,DATA STRING);")
+            self.cu.execute("CREATE TABLE info (SESSION STRING,STATUS STRING,URL STRING,DATA TEXT);")
+            self.cu.execute("CREATE TABLE sniff (SESSION STRING,METHOD STRING,URL STRING,COOKIE STRING,DATA TEXT);")
             logger.success("建立成功")
 
     def search_task(self,status,session):
@@ -55,10 +55,13 @@ class Core(object):
 
     def info(self,arg):
         try:
-            if arg=="":
-                return self.cu.execute("SELECT SESSION,STATUS,URL FROM info where status='terminated';")
+            data=re.sub('[\'\"]',' ',str(requests.get("http://127.0.0.1:8775/scan/"+arg+"/data").json()['data']))
+            if data!="":
+                self.cu.execute("UPDATE info SET DATA='" + str(data) + "' WHERE SESSION='" + str(arg) + "';")
+                self.conn.commit()
+                return data
             else:
-                return self.cu.execute("SELECT * FROM info WHERE SESSION='" + arg + "';")
+                return "没有数据"
         except:
             logger.error("查询错误")
 
@@ -76,6 +79,7 @@ class Core(object):
     @classmethod
     def create(cls,args):
         self=Core()
+        print self.cu.execute("SELECT * FROM info WHERE URL='%s'"%(args['URL'])).fetchone()
         if self.cu.execute("SELECT URL FROM info WHERE URL='%s'"%(args['URL'])).fetchone():return
         sess=requests.get("http://127.0.0.1:8775/task/new").json()
         cr_task=requests.post("http://127.0.0.1:8775/scan/"+sess['taskid']+"/start",data=json.dumps({'url':args['URL']}),headers={'Content-type':'application/json'})

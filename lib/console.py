@@ -26,7 +26,7 @@ class Interface(cmd.Cmd,Core):
             'stop':'停止探测',
             'inti':'初始化数据库  ',
             'status':'查看任务状态(可加session号查询)',
-            'info':'查看成功的任务(可加session号查询)',
+            'info':'查看任务的扫描结果',
             'exit':'退出'
         }
 
@@ -72,7 +72,7 @@ class Interface(cmd.Cmd,Core):
                 for session, status, url in self.status(arg):
                     print "%-20s%-13s%s" % (session, status, url)
                 print
-                print "共有%d个任务,%d个任务成功" %(self.count()[0][0],self.ok_count()[0][0]  )
+                print "共有%d个任务,%d个任务扫描完成" %(self.count()[0][0],self.ok_count()[0][0]  )
             else:
                 logger.info("没有任务")
         else:
@@ -80,17 +80,11 @@ class Interface(cmd.Cmd,Core):
                 print "%-20s%-13s%s" % (session, status, url)
 
     def do_info(self,arg):
-        print "%-20s%-15s%-17s%s" % ("ID", "状态", "地址","数据")
-        print "%-20s%-13s%-15s%s" % ("-------", "------","-----","------")
         if not arg:
-            for session, status, url in self.info(arg):
-                print "%-20s%-13s%s" % (session, status, url)
-            print
-            print "共有%d个任务成功"%self.ok_count()[0][0]
+            logger.error("请跟上参数SESSION")
         else:
-            for session, status, url,data in self.info(arg):
-                print "%-20s%-13s%-15s%s" % (session, status, url,data)
-            print
+            logger.info("%s的数据为"%arg)
+            print self.info(arg)
 
     def do_save(self,arg):
         self.save(arg)
