@@ -22,3 +22,6 @@
       在程序内输入start开启嗅探,stop停止嗅探
       
       程序内输入help显示帮助菜单
+      
+      
+Kiddy工具重构中..支持批量测试通用漏洞,SQL inject,XSS inject等多种漏洞，敬请期待...
