@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/vue.js"></script>
+    <script src="/static/js/element.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <link rel="stylesheet" href="/static/css/element.css">
+    <title>Kiddy登录页</title>
+    <style>
+        body{ text-align:center}
+        #app{ margin:0 auto; width:400px; height:100px;}
+        #app{
+            text-align: center;
+            height: 350px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        pre[class*="language-"] {
+            color: #333;
+            background: none;
+            font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            text-align: left;
+            white-space: pre;
+            word-spacing: normal;
+            word-break: normal;
+            word-wrap: normal;
+            line-height: 1.4;
+
+            -moz-tab-size: 8;
+            -o-tab-size: 8;
+            tab-size: 8;
+
+            -webkit-hyphens: none;
+            -moz-hyphens: none;
+            -ms-hyphens: none;
+            hyphens: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="logo">
+            <pre class="language-text">            ..||||||||∞ |||||
+            ╭||||━━　　━━ ||||╮
+            ╰|||　　 ~　　　|||╯
+            　||╰╭--╮ˋ╭--╮╯||
+            　||　╰/ /　 || ОО
+            </pre>
+        </div>
+        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+            <el-form-item label="账号" prop="username">
+                <el-input type="text" v-model="form.username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+                <el-input type="password" v-model="form.password"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('form')">提交</el-button>
+                <el-button @click="resetForm('form')">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</body>
+<script>
+    new Vue({
+        delimiters: ['${', '}'],
+        el: '#app',
+        data: {
+            form: {
+                username: '',
+                password: '',
+            },
+            rules: {
+                username: [
+                    { required: true , message: '请输入用户名' , trigger: 'blur'  }
+                ],
+                password: [
+                    { required: true , message: '请输入密码' , trigger: 'blur' }
+                ],
+            }
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        var self=this;
+                        var data={'username':this.$refs.form.model.username,
+                            'password':this.$refs.form.model.password,
+                        };
+                        $.ajax({
+                            url: '/login',
+                            type: 'POST',
+                            data: data,
+                            dataType: 'JSON',
+                            ContentType: "application/json",
+                            async : false,
+                        }).then(function (res) {
+                            if(res.code==200){
+                                console.log(res);
+                                message_echo(self,"登录成功正在跳转","success");
+                                window.location.href="/index";
+                            }
+                            if(res.code==202){
+                                message_echo(self,"登录失败请重新输入账户或密码","error");
+                            }
+                        }).fail(function () {
+                            message_echo(self,"登录失败请检查网络状态","error");
+                            console.log('失败');
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            }
+        },
+    });
+
+    // var Main = {
+    //     data() {
+    //         return {
+    //             form: {
+    //                 username: '',
+    //                 password: '',
+    //             },
+    //             rules: {
+    //                 username: [
+    //                     { required: true , message: '请输入用户名' , trigger: 'blur'  }
+    //                 ],
+    //                 password: [
+    //                     { required: true , message: '请输入密码' , trigger: 'blur' }
+    //                 ],
+    //             }
+    //         };
+    //     },
+    //     methods: {
+    //         submitForm(formName) {
+    //             this.$refs[formName].validate((valid) => {
+    //                 if (valid) {
+    //                     var self=this;
+    //                     var data={'username':this.$refs.form.model.username,
+    //                         'password':this.$refs.form.model.password,
+    //                     };
+    //                     $.ajax({
+    //                         url: '/login',
+    //                         type: 'POST',
+    //                         data: data,
+    //                         dataType: 'JSON',
+    //                         ContentType: "application/json",
+    //                         async : false,
+    //                     }).then(function (res) {
+    //                         if(res.code==200){
+    //                             console.log(res);
+    //                             message_echo(self,"登录成功正在跳转","success");
+    //                             window.location.href="/index";
+    //                         }
+    //                         if(res.code==202){
+    //                             message_echo(self,"登录失败请重新输入账户或密码","error");
+    //                         }
+    //                     }).fail(function () {
+    //                         message_echo(self,"登录失败请检查网络状态","error");
+    //                         console.log('失败');
+    //                     });
+    //                 } else {
+    //                     return false;
+    //                 }
+    //             });
+    //         },
+    //         resetForm(formName) {
+    //             this.$refs[formName].resetFields();
+    //         }
+    //     }
+    // };
+    // var Ctor = Vue.extend(Main);
+    // new Ctor().$mount('#app')
+</script>
+</html>

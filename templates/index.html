@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/vue.js"></script>
+    <script src="/static/js/element.js"></script>
+    <link rel="stylesheet" href="/static/css/element.css">
+    <script src="/static/js/vue-router.js"></script>
+    <script src="/static/js/router.js"></script>
+    <script src="/static/js/request.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="/static/js/xml2json.min.js"></script>
+
+    <title>Kiddy</title>
+    <style>
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            line-height: 60px;
+        }
+        .el-aside {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <el-container style="border: 1px solid #eee">
+        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+            <el-menu :default-openeds="['1']">
+                <el-submenu index="1">
+                    <template slot="title"><i class="el-icon-tickets"></i>扫描选项</template>
+                    <el-menu-item-group>
+                        <template slot="title">扫描工具</template>
+                        <el-menu-item index="1-1"><router-link to="/info">被动式组件</router-link></el-menu-item>
+                    </el-menu-item-group>
+                    <el-menu-item-group>
+                        <template slot="title">扫描结果</template>
+                        <el-submenu index="1-2">
+                            <template slot="title"><i class="el-icon-document"></i>扫描结果</template>
+                            <el-menu-item index="1-2-1"><router-link to="/result/sql">SQL扫描结果</router-link></el-menu-item>
+                            <el-menu-item index="1-2-1"><router-link to="/result/general">通用测试扫描结果</router-link></el-menu-item>
+                        </el-submenu>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="2">
+                    <template slot="title"><i class="el-icon-menu"></i>小工具</template>
+                    <el-menu-item-group>
+                        <el-menu-item index="2-1-1"><router-link to="/poc/list">POC查询</router-link></el-menu-item>
+                        <el-menu-item index="2-1-2"><router-link to="/poc/add">POC添加</router-link></el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="3">
+                    <template slot="title"><i class="el-icon-setting"></i>设置</template>
+                    <el-menu-item-group>
+                        <template slot="title">扫描组件设置</template>
+                        <el-menu-item index="3-1"><router-link to="/setting/sql">SQL注入</router-link></el-menu-item>
+                        <el-menu-item index="3-2">XSS注入</el-menu-item>
+                        <el-menu-item index="3-3"><router-link to="/setting/general">通用测试</router-link></el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
+        <el-container>
+            <el-header style="font-size: 12px">
+                <template slot-scope="scope">
+                    <el-switch v-model="monitor" @change="monitorF" active-text="开启被动式监听功能" active-color="#13ce66" inactive-color="#ff4949" inactive-text="关闭被动式监听功能">
+                    </el-switch>
+                    <span style="float:right">${ username }</span>
+                </template>
+            </el-header>
+
+            <router-view>
+            </router-view>
+        </el-container>
+    </el-container>
+</div>
+</body>
+<script type="text/javascript">
+    new Vue({
+        delimiters: ['${', '}'],
+        el: '#app',
+        data: {
+            username:"Start",
+            monitor:false,
+        },
+        methods:{
+            monitorF() {
+                var filed;
+                if(this._data.monitor){
+                    filed="启动";
+                }else{
+                    filed="关闭";
+                }
+                if(request_monitor(this._data.monitor)){
+                    message_echo(this,filed+'被动式组件成功',"success");
+                }else{
+                    message_echo(this,filed+'被动式组件失败',"error");
+                    this._data.monitor=false;
+                }
+            }
+        },
+        created: function () {
+            if(request_monitor("")){
+                this._data.monitor=true;
+            }else{
+                this._data.monitor=false;
+            }
+        },
+        router:router,
+    });
+</script>
+</html>

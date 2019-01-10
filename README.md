@@ -7,21 +7,33 @@
         　||╰╭--╮ˋ╭--╮╯||
         　||　╰/ /　 || ОО 
 
- 被动式SQL扫描工具
+ 被动式扫描器
    
  不得用于非法用途
  
-
+ 未经许可不得用于商业用途
+ 
+ ![avatar](case1.jpg)
+ 
  **使用说明**
+ 
+    使用mongodb数据库
+    
+    pip install requirements
+    
+    go.mod 为Go依赖
 
-      使用前进入Sqlmap输入以下命令
-            python sqlmapapi.py -s
+    go run main.go
+      Username Start
+      Password Start
       
-      浏览器代理端口号为8080
-      
-      在程序内输入start开启嗅探,stop停止嗅探
-      
-      程序内输入help显示帮助菜单
-      
-      
-Kiddy工具重构中..支持批量测试通用漏洞,SQL inject,XSS inject等多种漏洞，敬请期待...
+    可手动开启被动式组件
+        当前目录下 python container/monitor.py      
+ 
+ **事例数据**
+ 
+    可导入当前目录下scan.tar.gz文件
+        
+## License
+[Apache License 2.0](LICENSE)
+
