@@ -19,7 +19,7 @@
  
     使用mongodb数据库
     
-    pip install requirements
+    pip install -r requirements.txt
     
     go.mod 为Go依赖
 
